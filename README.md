@@ -1,24 +1,16 @@
-# Nanna Connect
+# Nanna Connect 🧓📱
 
-## Build For Dad ❤️ | NIAT Father's Day Challenge
+An ultra-accessible, voice-first web application designed specifically for elderly smartphone users in India.
 
-Nanna Connect is a voice-first assistive technology application designed for elderly and rural smartphone users.
+## Vision
 
-The application helps parents perform daily smartphone tasks using simple interfaces, voice commands, and large accessible buttons.
+Many elderly people struggle with modern smartphone interfaces due to small text, complex navigation, and unfamiliar technology. "Nanna Connect" (meaning "Father Connect") solves this by providing a simplified, voice-driven interface that makes essential smartphone functions accessible to everyone, regardless of their technical literacy.
 
-## Problem
+## Core Features 🌟
 
-My father is comfortable using phone calls and YouTube, but struggles with:
-
-* Typing WhatsApp messages
-* Managing contacts
-* Sharing photos
-* Sharing location
-* Remembering important numbers and notes
-
-Nanna Connect simplifies these tasks into one-tap actions.
-
-## Features
+* **Multi-Language Support**: Fully localized in English, Telugu, Hindi, Tamil, Kannada, and Malayalam with automatic language detection and onboarding.
+* **Voice-First Navigation**: Every action can be triggered by voice commands, and the app talks back to confirm actions.
+* **Giant Touch Targets**: All buttons are massive (minimum 100px height) and impossible to miss.
 
 ### 📞 Call Contact
 

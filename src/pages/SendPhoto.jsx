@@ -4,7 +4,7 @@ import { useAppContext } from '../contexts/AppContext';
 import { ConfirmationDialog } from '../components/ConfirmationDialog';
 
 export const SendPhoto = ({ navigate }) => {
-  const { contacts, speak } = useAppContext();
+  const { contacts, speak, t } = useAppContext();
   const fileInputRef = useRef(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [previewUrl, setPreviewUrl] = useState(null);
@@ -18,7 +18,7 @@ export const SendPhoto = ({ navigate }) => {
       setSelectedFile(file);
       setPreviewUrl(URL.createObjectURL(file));
       setStep(2);
-      speak('ఎవరికి పంపాలి? (Select Contact)');
+      speak(t('whoToSend'));
     }
   };
 
@@ -30,14 +30,13 @@ export const SendPhoto = ({ navigate }) => {
           title: 'Photo from Nanna Connect',
           text: 'Sending a photo via Nanna Connect'
         });
-        speak('ఫోటో పంపబడింది');
+        speak(t('photoSent'));
         navigate('Home');
       } catch (error) {
         console.error('Error sharing:', error);
       }
     } else {
-      speak('మీ ఫోన్ లో షేర్ చేయడం కుదరదు');
-      // Fallback could be something else if needed
+      speak(t('cantShare'));
     }
   };
 
@@ -47,7 +46,7 @@ export const SendPhoto = ({ navigate }) => {
         <button className="back-btn" onClick={() => navigate('Home')}>
           <ArrowLeft size={32} />
         </button>
-        <h1 className="screen-title">ఫోటో పంపండి (Photo)</h1>
+        <h1 className="screen-title">{t('photoTitle')}</h1>
       </div>
 
       {step === 1 && (
@@ -66,7 +65,7 @@ export const SendPhoto = ({ navigate }) => {
             style={{ minHeight: '200px' }}
           >
             <Camera className="icon" style={{ fontSize: '4rem' }} />
-            <span className="text-huge">ఫోటో తీయండి లేదా ఎంచుకోండి</span>
+            <span className="text-huge">{t('takeOrPickPhoto')}</span>
           </button>
         </div>
       )}
@@ -84,11 +83,11 @@ export const SendPhoto = ({ navigate }) => {
               style={{ marginTop: '16px', padding: '12px 24px', fontSize: '1.25rem', borderRadius: '8px' }}
               onClick={() => { setStep(1); setSelectedFile(null); setPreviewUrl(null); }}
             >
-              వేరే ఫోటో ఎంచుకోండి (Change Photo)
+              {t('changePhoto')}
             </button>
           </div>
 
-          <h2 className="text-huge">ఎవరికి పంపాలి?</h2>
+          <h2 className="text-huge">{t('whoToSend')}</h2>
           
           {(Array.isArray(contacts) ? contacts : []).map(contact => (
             <button 
@@ -108,10 +107,10 @@ export const SendPhoto = ({ navigate }) => {
 
       {showConfirm && (
         <ConfirmationDialog
-          title="ఫోటో పంపాలా?"
-          message={`${selectedContact?.name} కి ఫోటో పంపించండి.`}
-          confirmText="పంపించు (Send)"
-          cancelText="ఆపు (Cancel)"
+          title={t('photoTitle')}
+          message={`${t('sendPhotoConfirm')} ${selectedContact?.name}?`}
+          confirmText={t('send')}
+          cancelText={t('cancel')}
           onConfirm={handleSend}
           onCancel={() => setShowConfirm(false)}
         />

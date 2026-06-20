@@ -1,11 +1,16 @@
 import React from 'react';
-import { Phone, Mic, Camera, MapPin, AlertOctagon, UserPlus, Calculator, Edit3, Pin } from 'lucide-react';
+import { Phone, Mic, Camera, MapPin, AlertOctagon, UserPlus, Calculator, Edit3, Pin, Globe, Pill } from 'lucide-react';
 import { CardButton } from '../components/CardButton';
 import { useAppContext } from '../contexts/AppContext';
+import { getMedicineIcon, formatMedicineTime } from '../utils/timeUtils';
 
 export const Home = ({ navigate }) => {
-  const { notes, speak } = useAppContext();
+  const { notes, medicines, speak, t } = useAppContext();
   const pinnedNotes = (Array.isArray(notes) ? notes : []).filter(n => n.pinned).slice(0, 3);
+  
+  // Get upcoming medicines for today
+  const todayString = new Date().toDateString();
+  const upcomingMedicines = (Array.isArray(medicines) ? medicines : []).filter(m => m.lastTakenDate !== todayString);
 
   const handleNavigate = (page, announcement) => {
     speak(announcement);
@@ -15,58 +20,121 @@ export const Home = ({ navigate }) => {
   return (
     <div className="app-container">
       <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-        <h1 className="text-huge" style={{ color: 'var(--primary-color)' }}>Nanna Connect</h1>
+        <h1 className="text-huge" style={{ color: 'var(--primary-color)' }}>{t('appTitle')}</h1>
+      </div>
+
+      {/* Today's Medicines Widget */}
+      <div style={{ 
+        backgroundColor: 'var(--card-background)', 
+        padding: '16px', 
+        borderRadius: 'var(--border-radius-lg)',
+        boxShadow: '0 2px 4px rgba(0,0,0,0.05)',
+        marginBottom: '24px',
+        border: '2px solid var(--primary-color)'
+      }}>
+        <h2 className="text-large" style={{ display: 'flex', alignItems: 'center', gap: '8px', margin: '0 0 16px 0', color: 'var(--primary-color)' }}>
+          <Pill size={32} /> {t('todaysMedicines')}
+        </h2>
+        {upcomingMedicines.length > 0 ? (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {upcomingMedicines.map(med => (
+              <div 
+                key={med.id}
+                style={{
+                  padding: '16px',
+                  borderRadius: 'var(--border-radius-md)',
+                  backgroundColor: '#f8f9fa',
+                  border: '1px solid #eee',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center'
+                }}
+              >
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span className="text-large" style={{ fontWeight: 'bold' }}>
+                    {getMedicineIcon(med.type)} {med.name}
+                  </span>
+                </div>
+                <span className="text-large" style={{ color: 'var(--primary-color)', fontWeight: 'bold' }}>
+                  {formatMedicineTime(med.type, med.time, t)}
+                </span>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-medium" style={{ color: 'var(--text-secondary)', textAlign: 'center', margin: '16px 0' }}>
+            {t('noMedicinesAdded')}
+          </p>
+        )}
       </div>
 
       <div className="grid-2col" style={{ marginBottom: '24px' }}>
         <CardButton 
+          icon={Pill} 
+          title={t('medicineReminder')} 
+          subtitle={t('medicineReminderSubtitle')}
+          onClick={() => handleNavigate('MyMedicines', t('medicineReminder'))} 
+        />
+        <CardButton 
           icon={Phone} 
-          title="కాల్ చేయండి" 
-          subtitle="Call Contact"
-          onClick={() => handleNavigate('CallContact', 'కాల్ చేయడానికి కాంటాక్ట్ ఎంచుకోండి')} 
+          title={t('callContact')} 
+          subtitle={t('callContactSubtitle')}
+          onClick={() => handleNavigate('CallContact', t('callContactVoice'))} 
         />
         <CardButton 
           icon={Mic} 
-          title="మెసేజ్ పంపండి" 
-          subtitle="Voice Message"
-          onClick={() => handleNavigate('VoiceMessage', 'మెసేజ్ చెప్పండి')} 
+          title={t('voiceMessage')} 
+          subtitle={t('voiceMessageSubtitle')}
+          onClick={() => handleNavigate('VoiceMessage', t('voiceMessageVoice'))} 
         />
         <CardButton 
           icon={Camera} 
-          title="ఫోటో పంపండి" 
-          subtitle="Send Photo"
-          onClick={() => handleNavigate('SendPhoto', 'ఫోటో పంపడానికి ఎంచుకోండి')} 
+          title={t('sendPhoto')} 
+          subtitle={t('sendPhotoSubtitle')}
+          onClick={() => handleNavigate('SendPhoto', t('sendPhotoVoice'))} 
         />
         <CardButton 
           icon={MapPin} 
-          title="లొకేషన్ పంపండి" 
-          subtitle="Share Location"
-          onClick={() => handleNavigate('ShareLocation', 'లొకేషన్ పంపుతున్నాము')} 
+          title={t('shareLocation')} 
+          subtitle={t('shareLocationSubtitle')}
+          onClick={() => handleNavigate('ShareLocation', t('shareLocationVoice'))} 
         />
         <CardButton 
           icon={AlertOctagon} 
-          title="సహాయం" 
-          subtitle="Emergency"
+          title={t('sos')} 
+          subtitle=""
           variant="danger"
-          onClick={() => handleNavigate('Emergency', 'సహాయం కావాలా?')} 
+          onClick={() => handleNavigate('SOS', t('sos'))} 
         />
         <CardButton 
           icon={UserPlus} 
-          title="కాంటాక్ట్ జోడించండి" 
-          subtitle="Add Contact"
-          onClick={() => handleNavigate('AddContact', 'కొత్త కాంటాక్ట్ జోడించండి')} 
+          title={t('emergencyContacts')} 
+          subtitle=""
+          onClick={() => handleNavigate('EmergencyContacts', t('emergencyContacts'))} 
+        />
+        <CardButton 
+          icon={UserPlus} 
+          title={t('addContact')} 
+          subtitle={t('addContactSubtitle')}
+          onClick={() => handleNavigate('AddContact', t('addContactVoice'))} 
         />
         <CardButton 
           icon={Calculator} 
-          title="క్యాలిక్యులేటర్" 
-          subtitle="Calculator"
-          onClick={() => handleNavigate('Calculator', 'క్యాలిక్యులేటర్ వాడుదాం')} 
+          title={t('calculator')} 
+          subtitle={t('calculatorSubtitle')}
+          onClick={() => handleNavigate('Calculator', t('calculatorVoice'))} 
         />
         <CardButton 
           icon={Edit3} 
-          title="త్వరిత నోట్స్" 
-          subtitle="Quick Notes"
-          onClick={() => handleNavigate('QuickNotes', 'నోట్స్ రాయండి లేదా చదవండి')} 
+          title={t('quickNotes')} 
+          subtitle={t('quickNotesSubtitle')}
+          onClick={() => handleNavigate('QuickNotes', t('quickNotesVoice'))} 
+        />
+        <CardButton 
+          icon={Globe} 
+          title={t('language')} 
+          subtitle={t('languageSubtitle')}
+          onClick={() => navigate('LanguageSelection')} 
         />
       </div>
 
@@ -78,10 +146,10 @@ export const Home = ({ navigate }) => {
           boxShadow: '0 2px 4px rgba(0,0,0,0.05)'
         }}>
           <h2 className="text-large" style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px', color: 'var(--primary-color)' }}>
-            <Pin /> Pinned Notes (ముఖ్యమైనవి)
+            <Pin /> {t('pinnedNotes')}
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {(Array.isArray(pinnedNotes) ? pinnedNotes : []).map(note => (
+            {pinnedNotes.map(note => (
               <button 
                 key={note.id}
                 style={{

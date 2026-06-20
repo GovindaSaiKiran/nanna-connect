@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
 import { ArrowLeft, Mic, Delete, Equal, Volume2 } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
+import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 
 export const Calculator = ({ navigate }) => {
-  const { speak } = useAppContext();
+  const { speak, t, language } = useAppContext();
+  const { isListening, transcript, startListening, stopListening } = useSpeechRecognition(language);
   const [expression, setExpression] = useState('');
   const [result, setResult] = useState('');
 
@@ -13,14 +15,13 @@ export const Calculator = ({ navigate }) => {
 
   const calculate = () => {
     try {
-      // Basic safe evaluation for simple math
       const cleanExpr = expression.replace(/x/g, '*').replace(/÷/g, '/');
       const res = new Function('return ' + cleanExpr)();
       setResult(res.toString());
-      speak(`జవాబు ${res}`);
+      speak(`${t('answer')} ${res}`);
     } catch (e) {
-      setResult('Error');
-      speak('తప్పు జరిగింది');
+      setResult(t('error'));
+      speak(t('error'));
     }
   };
 
@@ -32,6 +33,31 @@ export const Calculator = ({ navigate }) => {
   const deleteLast = () => {
     setExpression(prev => prev.slice(0, -1));
   };
+
+  // Auto calculate when transcript changes
+  React.useEffect(() => {
+    if (transcript && !isListening) {
+      setExpression(transcript);
+      try {
+        const sanitized = transcript
+          .replace(/plus/gi, '+')
+          .replace(/minus/gi, '-')
+          .replace(/times|multiplied by/gi, '*')
+          .replace(/divided by/gi, '/')
+          .replace(/into/gi, '*')
+          .replace(/[^-()\d/*+.]/g, '');
+        
+        if (sanitized) {
+          const res = new Function('return ' + sanitized)();
+          setResult(res.toString());
+          speak(`${t('answer')} ${res}`);
+        }
+      } catch (e) {
+        setResult(t('error'));
+        speak(t('error'));
+      }
+    }
+  }, [transcript, isListening, speak, t]);
 
   const buttons = [
     ['7', '8', '9', '÷'],
@@ -46,7 +72,7 @@ export const Calculator = ({ navigate }) => {
         <button className="back-btn" onClick={() => navigate('Home')}>
           <ArrowLeft size={32} />
         </button>
-        <h1 className="screen-title">క్యాలిక్యులేటర్</h1>
+        <h1 className="screen-title">{t('calculatorTitle')}</h1>
       </div>
 
       <div style={{ 
@@ -67,8 +93,8 @@ export const Calculator = ({ navigate }) => {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', flex: 1 }}>
-        {(Array.isArray(buttons) ? buttons : []).map((row, rowIndex) => 
-          (Array.isArray(row) ? row : []).map((btn, colIndex) => (
+        {buttons.map((row, rowIndex) => 
+          row.map((btn, colIndex) => (
             <button
               key={`${rowIndex}-${colIndex}`}
               className={`btn-massive ${['÷','x','-','+'].includes(btn) ? 'btn-primary' : (btn === 'C' ? 'btn-danger' : 'btn-outline')}`}
@@ -97,6 +123,15 @@ export const Calculator = ({ navigate }) => {
           <Equal size={40} />
         </button>
       </div>
+
+      <button 
+        className={`btn-massive ${isListening ? 'btn-danger' : 'btn-primary'}`}
+        onClick={isListening ? stopListening : startListening}
+        style={{ padding: '16px', marginTop: '16px', minHeight: '80px' }}
+      >
+        <Mic className="icon" />
+        <span className="text-large">{isListening ? t('listening') : t('calculatorVoice')}</span>
+      </button>
     </div>
   );
 };

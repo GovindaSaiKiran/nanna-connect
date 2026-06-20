@@ -4,15 +4,15 @@ import { useAppContext } from '../contexts/AppContext';
 import { formatPhoneNumber } from '../utils/phoneUtils';
 
 export const AddContact = ({ navigate }) => {
-  const { contacts, addContact, speak } = useAppContext();
+  const { contacts, addContact, speak, t } = useAppContext();
   const [name, setName] = useState('');
   const [phone, setPhone] = useState('');
   const [error, setError] = useState('');
 
   const handleSave = () => {
     if (!name.trim() || !phone.trim()) {
-      setError('పేరు, నంబర్ రెండు ఎంటర్ చేయండి (Enter name and number)');
-      speak('పేరు, నంబర్ రెండు ఎంటర్ చేయండి');
+      setError(t('enterNameAndNumber'));
+      speak(t('enterNameAndNumber'));
       return;
     }
 
@@ -21,13 +21,13 @@ export const AddContact = ({ navigate }) => {
     // Check if number exists
     const existing = (Array.isArray(contacts) ? contacts : []).find(c => c.phone === formattedPhone);
     if (existing) {
-      if (!window.confirm(`ఈ నంబర్ తో ${existing.name} ఆల్రెడీ ఉన్నారు. అప్‌డేట్ చేయాలా?`)) {
+      if (!window.confirm(`${existing.name} ${t('updateExisting')}`)) {
         return;
       }
     }
 
     addContact({ name: name.trim(), phone: formattedPhone });
-    speak('కాంటాక్ట్ సేవ్ చేయబడింది');
+    speak(t('contactSaved'));
     navigate('Home');
   };
 
@@ -36,19 +36,19 @@ export const AddContact = ({ navigate }) => {
       try {
         const props = ['name', 'tel'];
         const opts = { multiple: false };
-        const contacts = await navigator.contacts.select(props, opts);
+        const contactsList = await navigator.contacts.select(props, opts);
         
-        if (contacts.length > 0) {
-          const contact = contacts[0];
+        if (contactsList.length > 0) {
+          const contact = contactsList[0];
           setName(contact.name[0] || '');
           setPhone(contact.tel[0] || '');
         }
       } catch (ex) {
         console.error('Contact picker failed', ex);
-        setError('కాంటాక్ట్ ఇంపోర్ట్ పనిచేయలేదు (Contact import failed)');
+        setError(t('importFailed'));
       }
     } else {
-      setError('మీ ఫోన్ లో కాంటాక్ట్ ఇంపోర్ట్ పనిచేయదు (Contact import not supported)');
+      setError(t('notSupported'));
     }
   };
 
@@ -58,7 +58,7 @@ export const AddContact = ({ navigate }) => {
         <button className="back-btn" onClick={() => navigate('Home')}>
           <ArrowLeft size={32} />
         </button>
-        <h1 className="screen-title">కొత్త కాంటాక్ట్ (Add Contact)</h1>
+        <h1 className="screen-title">{t('addContactTitle')}</h1>
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1 }}>
@@ -68,26 +68,26 @@ export const AddContact = ({ navigate }) => {
           style={{ marginBottom: '16px', minHeight: '80px' }}
         >
           <User className="icon" />
-          <span>ఫోన్ కాంటాక్ట్స్ నుండి తీసుకోండి (Import)</span>
+          <span>{t('importFromPhone')}</span>
         </button>
 
         <div style={{ textAlign: 'center', margin: '8px 0', color: 'var(--text-secondary)' }}>
-          లేదా (OR)
+          {t('or')}
         </div>
 
         <div>
-          <label className="text-large" style={{ display: 'block', marginBottom: '8px' }}>పేరు (Name)</label>
+          <label className="text-large" style={{ display: 'block', marginBottom: '8px' }}>{t('nameLabel')}</label>
           <input 
             type="text" 
             className="massive-input"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            placeholder="పేరు"
+            placeholder={t('nameLabel')}
           />
         </div>
 
         <div>
-          <label className="text-large" style={{ display: 'block', marginBottom: '8px' }}>నంబర్ (Number)</label>
+          <label className="text-large" style={{ display: 'block', marginBottom: '8px' }}>{t('numberLabel')}</label>
           <input 
             type="tel" 
             className="massive-input"
@@ -105,7 +105,7 @@ export const AddContact = ({ navigate }) => {
           style={{ marginTop: '16px' }}
         >
           <Save className="icon" />
-          <span>సేవ్ చేయండి (Save)</span>
+          <span>{t('save')}</span>
         </button>
       </div>
     </div>

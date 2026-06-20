@@ -1,46 +1,39 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, MapPin, RefreshCw } from 'lucide-react';
+import React, { useState } from 'react';
+import { ArrowLeft, MapPin } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
+import { ConfirmationDialog } from '../components/ConfirmationDialog';
 
 export const ShareLocation = ({ navigate }) => {
-  const { contacts, speak } = useAppContext();
-  const [status, setStatus] = useState('లొకేషన్ వెతుకుతున్నాము... (Finding location...)');
-  const [locationLink, setLocationLink] = useState(null);
+  const { contacts, speak, t } = useAppContext();
   const [step, setStep] = useState(1); // 1: Get Location, 2: Select Contact
+  const [location, setLocation] = useState(null);
+  const [selectedContact, setSelectedContact] = useState(null);
+  const [showConfirm, setShowConfirm] = useState(false);
 
-  const getLocation = () => {
-    setStatus('లొకేషన్ వెతుకుతున్నాము... (Finding location...)');
-    if (!navigator.geolocation) {
-      setStatus('మీ ఫోన్ లో లొకేషన్ సపోర్ట్ లేదు (Location not supported)');
-      speak('మీ ఫోన్ లో లొకేషన్ సపోర్ట్ లేదు');
-      return;
+  const handleGetLocation = () => {
+    speak(t('gettingLocation'));
+    if ('geolocation' in navigator) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          setLocation(`https://maps.google.com/?q=${position.coords.latitude},${position.coords.longitude}`);
+          setStep(2);
+          speak(t('whoToSend'));
+        },
+        (error) => {
+          console.error('Error getting location', error);
+          speak(t('locationError'));
+        }
+      );
+    } else {
+      speak(t('cantShare'));
     }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const { latitude, longitude } = position.coords;
-        const link = `https://www.google.com/maps?q=${latitude},${longitude}`;
-        setLocationLink(link);
-        setStatus('లొకేషన్ దొరికింది (Location found)');
-        speak('లొకేషన్ దొరికింది. ఎవరికి పంపాలి?');
-        setStep(2);
-      },
-      (error) => {
-        setStatus('లొకేషన్ దొరకలేదు. దయచేసి పర్మిషన్ ఇవ్వండి. (Location access denied)');
-        speak('లొకేషన్ దొరకలేదు');
-      },
-      { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
-    );
   };
 
-  useEffect(() => {
-    getLocation();
-  }, []);
-
-  const handleShare = (contact) => {
-    const encodedMessage = encodeURIComponent(`నా లొకేషన్: ${locationLink}`);
-    const phone = contact.phone.replace(/[^\d+]/g, '');
-    window.location.href = `https://wa.me/${phone}?text=${encodedMessage}`;
+  const handleSend = () => {
+    const message = encodeURIComponent(`My location: ${location}`);
+    const phone = selectedContact.phone.replace(/[^\d+]/g, '');
+    window.location.href = `https://wa.me/${phone}?text=${message}`;
+    speak(t('locationSent'));
     navigate('Home');
   };
 
@@ -50,40 +43,53 @@ export const ShareLocation = ({ navigate }) => {
         <button className="back-btn" onClick={() => navigate('Home')}>
           <ArrowLeft size={32} />
         </button>
-        <h1 className="screen-title">లొకేషన్ పంపండి (Location)</h1>
+        <h1 className="screen-title">{t('locationTitle')}</h1>
       </div>
 
-      <div style={{ textAlign: 'center', marginBottom: '32px', padding: '24px', backgroundColor: '#fff', borderRadius: '16px', border: '2px solid var(--primary-color)' }}>
-        <MapPin size={64} color="var(--primary-color)" style={{ marginBottom: '16px' }} />
-        <p className="text-large">{status}</p>
-        
-        {step === 1 && status.includes('దొరకలేదు') && (
+      {step === 1 && (
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '24px', flex: 1, justifyContent: 'center' }}>
           <button 
-            className="btn-massive btn-primary" 
-            style={{ marginTop: '16px' }}
-            onClick={getLocation}
+            className="btn-massive btn-primary"
+            onClick={handleGetLocation}
+            style={{ minHeight: '200px' }}
           >
-            <RefreshCw className="icon" />
-            మళ్ళీ ప్రయత్నించండి (Retry)
+            <MapPin className="icon" style={{ fontSize: '4rem' }} />
+            <span className="text-huge">{t('shareLocation')}</span>
           </button>
-        )}
-      </div>
+        </div>
+      )}
 
       {step === 2 && (
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-          <h2 className="text-huge">ఎవరికి పంపాలి?</h2>
+          <h2 className="text-huge" style={{ textAlign: 'center', marginBottom: '16px' }}>
+            {t('whoToSend')}
+          </h2>
           
           {(Array.isArray(contacts) ? contacts : []).map(contact => (
             <button 
               key={contact.id}
               className="btn-massive btn-outline"
-              onClick={() => handleShare(contact)}
+              onClick={() => {
+                setSelectedContact(contact);
+                setShowConfirm(true);
+              }}
               style={{ flexDirection: 'row', justifyContent: 'flex-start', padding: '16px 24px' }}
             >
               <span className="text-large">{contact.name}</span>
             </button>
           ))}
         </div>
+      )}
+
+      {showConfirm && (
+        <ConfirmationDialog
+          title={t('locationTitle')}
+          message={`${t('sendLocationConfirm')} ${selectedContact?.name}?`}
+          confirmText={t('send')}
+          cancelText={t('cancel')}
+          onConfirm={handleSend}
+          onCancel={() => setShowConfirm(false)}
+        />
       )}
     </div>
   );
