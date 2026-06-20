@@ -75,7 +75,7 @@ export const VoiceMessage = ({ navigate }) => {
 
           <h2 className="text-huge" style={{ margin: '16px 0' }}>ఎవరికి పంపాలి?</h2>
           
-          {contacts.map(contact => (
+          {(Array.isArray(contacts) ? contacts : []).map(contact => (
             <button 
               key={contact.id}
               className="btn-massive btn-outline"

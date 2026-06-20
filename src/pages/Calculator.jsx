@@ -67,8 +67,8 @@ export const Calculator = ({ navigate }) => {
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '8px', flex: 1 }}>
-        {buttons.map((row, rowIndex) => 
-          row.map((btn, colIndex) => (
+        {(Array.isArray(buttons) ? buttons : []).map((row, rowIndex) => 
+          (Array.isArray(row) ? row : []).map((btn, colIndex) => (
             <button
               key={`${rowIndex}-${colIndex}`}
               className={`btn-massive ${['÷','x','-','+'].includes(btn) ? 'btn-primary' : (btn === 'C' ? 'btn-danger' : 'btn-outline')}`}

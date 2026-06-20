@@ -6,12 +6,12 @@ import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 const AppContext = createContext();
 
 export const AppProvider = ({ children }) => {
-  const contacts = useContacts();
-  const notes = useNotes();
+  const contactsHook = useContacts();
+  const notesHook = useNotes();
   const { speak, stop } = useSpeechSynthesis();
 
   return (
-    <AppContext.Provider value={{ contacts, notes, speak, stopSpeak: stop }}>
+    <AppContext.Provider value={{ ...contactsHook, ...notesHook, speak, stopSpeak: stop }}>
       {children}
     </AppContext.Provider>
   );

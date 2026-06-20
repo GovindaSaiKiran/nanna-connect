@@ -73,7 +73,7 @@ export const ShareLocation = ({ navigate }) => {
         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
           <h2 className="text-huge">ఎవరికి పంపాలి?</h2>
           
-          {contacts.map(contact => (
+          {(Array.isArray(contacts) ? contacts : []).map(contact => (
             <button 
               key={contact.id}
               className="btn-massive btn-outline"

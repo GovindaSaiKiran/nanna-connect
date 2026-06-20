@@ -6,19 +6,19 @@ export const useContacts = () => {
   const addContact = (contact) => {
     setContacts((prev) => {
       // Check for duplicate number
-      const existingIndex = prev.findIndex(c => c.phone === contact.phone);
+      const existingIndex = (Array.isArray(prev) ? prev : []).findIndex(c => c.phone === contact.phone);
       if (existingIndex >= 0) {
         // Update existing
-        const newContacts = [...prev];
+        const newContacts = [...(Array.isArray(prev) ? prev : [])];
         newContacts[existingIndex] = { ...newContacts[existingIndex], ...contact };
         return newContacts;
       }
-      return [...prev, { id: Date.now().toString(), ...contact }];
+      return [...(Array.isArray(prev) ? prev : []), { id: Date.now().toString(), ...contact }];
     });
   };
 
   const removeContact = (id) => {
-    setContacts(prev => prev.filter(c => c.id !== id));
+    setContacts(prev => (Array.isArray(prev) ? prev : []).filter(c => c.id !== id));
   };
 
   const findContactByVoice = (transcript) => {
@@ -26,10 +26,10 @@ export const useContacts = () => {
     const lowerTranscript = transcript.toLowerCase();
     
     // Exact or partial name match
-    const matches = contacts.filter(c => {
-      const lowerName = c.name.toLowerCase();
+    const matches = (Array.isArray(contacts) ? contacts : []).filter(c => {
+      const lowerName = c.name?.toLowerCase() || '';
       // Simple fuzzy matching: if transcript contains the name or name contains transcript
-      return lowerTranscript.includes(lowerName) || lowerName.includes(lowerTranscript);
+      return lowerName && (lowerTranscript.includes(lowerName) || lowerName.includes(lowerTranscript));
     });
 
     if (matches.length > 0) {

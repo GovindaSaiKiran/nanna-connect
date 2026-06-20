@@ -5,7 +5,7 @@ import { useAppContext } from '../contexts/AppContext';
 
 export const Home = ({ navigate }) => {
   const { notes, speak } = useAppContext();
-  const pinnedNotes = notes.filter(n => n.pinned).slice(0, 3);
+  const pinnedNotes = (Array.isArray(notes) ? notes : []).filter(n => n.pinned).slice(0, 3);
 
   const handleNavigate = (page, announcement) => {
     speak(announcement);
@@ -81,7 +81,7 @@ export const Home = ({ navigate }) => {
             <Pin /> Pinned Notes (ముఖ్యమైనవి)
           </h2>
           <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            {pinnedNotes.map(note => (
+            {(Array.isArray(pinnedNotes) ? pinnedNotes : []).map(note => (
               <button 
                 key={note.id}
                 style={{

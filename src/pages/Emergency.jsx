@@ -32,7 +32,7 @@ export const Emergency = ({ navigate }) => {
           ఎవరికి కాల్ చేయాలి?
         </h2>
 
-        {emergencyContacts.map(contact => (
+        {(Array.isArray(emergencyContacts) ? emergencyContacts : []).map(contact => (
           <button 
             key={contact.name}
             className="btn-massive btn-danger"

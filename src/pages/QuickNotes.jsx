@@ -28,7 +28,7 @@ export const QuickNotes = ({ navigate }) => {
     speak('నోట్ సేవ్ చేయబడింది');
   };
 
-  const filteredNotes = notes.filter(n => n.text.toLowerCase().includes(searchQuery.toLowerCase()));
+  const filteredNotes = (Array.isArray(notes) ? notes : []).filter(n => n.text.toLowerCase().includes(searchQuery.toLowerCase()));
 
   return (
     <div className="app-container">
@@ -78,7 +78,7 @@ export const QuickNotes = ({ navigate }) => {
       </div>
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', flex: 1, overflowY: 'auto' }}>
-        {filteredNotes.map(note => (
+        {(Array.isArray(filteredNotes) ? filteredNotes : []).map(note => (
           <div key={note.id} style={{ 
             backgroundColor: note.pinned ? '#fff3cd' : '#fff', 
             padding: '16px', 

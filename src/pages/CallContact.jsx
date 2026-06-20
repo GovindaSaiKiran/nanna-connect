@@ -13,7 +13,7 @@ export const CallContact = ({ navigate }) => {
       setFilter(transcript);
       // Auto-search logic
       const lowerTranscript = transcript.toLowerCase();
-      const matches = contacts.filter(c => 
+      const matches = (Array.isArray(contacts) ? contacts : []).filter(c => 
         c.name.toLowerCase().includes(lowerTranscript) ||
         lowerTranscript.includes(c.name.toLowerCase())
       );
@@ -33,7 +33,7 @@ export const CallContact = ({ navigate }) => {
     window.location.href = `tel:${contact.phone}`;
   };
 
-  const filteredContacts = contacts.filter(c => 
+  const filteredContacts = (Array.isArray(contacts) ? contacts : []).filter(c => 
     c.name.toLowerCase().includes(filter.toLowerCase())
   );
 
@@ -65,7 +65,7 @@ export const CallContact = ({ navigate }) => {
       )}
 
       <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
-        {filteredContacts.map(contact => (
+        {(Array.isArray(filteredContacts) ? filteredContacts : []).map(contact => (
           <button 
             key={contact.id}
             className="btn-massive btn-outline"

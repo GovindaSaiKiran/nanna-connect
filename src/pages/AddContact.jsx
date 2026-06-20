@@ -19,7 +19,7 @@ export const AddContact = ({ navigate }) => {
     const formattedPhone = formatPhoneNumber(phone);
     
     // Check if number exists
-    const existing = contacts.find(c => c.phone === formattedPhone);
+    const existing = (Array.isArray(contacts) ? contacts : []).find(c => c.phone === formattedPhone);
     if (existing) {
       if (!window.confirm(`ఈ నంబర్ తో ${existing.name} ఆల్రెడీ ఉన్నారు. అప్‌డేట్ చేయాలా?`)) {
         return;
