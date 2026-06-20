@@ -1,16 +1,71 @@
-# React + Vite
+# Nanna Connect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Build For Dad ❤️ | NIAT Father's Day Challenge
 
-Currently, two official plugins are available:
+Nanna Connect is a voice-first assistive technology application designed for elderly and rural smartphone users.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+The application helps parents perform daily smartphone tasks using simple interfaces, voice commands, and large accessible buttons.
 
-## React Compiler
+## Problem
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+My father is comfortable using phone calls and YouTube, but struggles with:
 
-## Expanding the ESLint configuration
+* Typing WhatsApp messages
+* Managing contacts
+* Sharing photos
+* Sharing location
+* Remembering important numbers and notes
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Nanna Connect simplifies these tasks into one-tap actions.
+
+## Features
+
+### 📞 Call Contact
+
+Call important family members with a single tap.
+
+### 🎤 Voice Message
+
+Speak naturally and send WhatsApp messages using voice.
+
+### 📷 Send Photo
+
+Select and share photos easily.
+
+### 📍 Share Location
+
+Share current location instantly.
+
+### 🆘 Emergency SOS
+
+Quick emergency contact access.
+
+### ➕ Contact Management
+
+Store and manage important contacts.
+
+### 🧮 Calculator
+
+Simple calculator for daily calculations.
+
+### 📝 Quick Notes
+
+Save phone numbers, bus names, product names, addresses, and reminders using text or voice.
+
+## Technology Stack
+
+* React 18
+* Vite
+* Progressive Web App (PWA)
+* Web Speech API
+* Speech Synthesis API
+* Geolocation API
+* Web Share API
+* LocalStorage
+* Vanilla CSS
+
+## Built By
+
+Taninki Govinda Sai Kiran
+
+NIAT – Build For Dad Challenge
