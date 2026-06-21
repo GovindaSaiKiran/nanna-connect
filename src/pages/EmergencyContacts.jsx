@@ -1,9 +1,9 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowLeft, Plus, Star, Phone, Edit2, Trash2 } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 
 export const EmergencyContacts = ({ navigate }) => {
-  const { emergencyContacts, defaultServices, removeEmergencyContact, setPrimary, setSecondary, t } = useAppContext();
+  const { emergencyContacts, defaultServices, removeEmergencyContact, setPrimary, setSecondary, speakFeedback, t } = useAppContext();
 
   const handleRemove = (id, name) => {
     if (window.confirm(t('remove') + ' ' + name + '?')) {

@@ -9,7 +9,8 @@ export const ConfirmationDialog = ({
   onListen,
   confirmText = "Yes",
   cancelText = "Cancel",
-  confirmVariant = "success"
+  confirmVariant = "success",
+  extraAction
 }) => {
   return (
     <div style={{
@@ -51,18 +52,30 @@ export const ConfirmationDialog = ({
           </button>
         )}
 
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginTop: '16px' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: extraAction ? '1fr 1fr 1fr' : '1fr 1fr', gap: '16px', marginTop: '16px' }}>
           <button 
             className="btn-massive btn-danger"
             onClick={onCancel}
+            style={{ padding: '8px' }}
           >
             <X className="icon" />
             <span>{cancelText}</span>
           </button>
+
+          {extraAction && (
+             <button 
+                className={`btn-massive btn-${extraAction.variant || 'outline'}`}
+                onClick={extraAction.onClick}
+                style={{ padding: '8px' }}
+             >
+                <span>{extraAction.label}</span>
+             </button>
+          )}
           
           <button 
             className={`btn-massive btn-${confirmVariant}`}
             onClick={onConfirm}
+            style={{ padding: '8px' }}
           >
             <Check className="icon" />
             <span>{confirmText}</span>

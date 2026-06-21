@@ -1,11 +1,12 @@
-import React from 'react';
-import { Phone, Mic, Camera, MapPin, AlertOctagon, UserPlus, Calculator, Edit3, Pin, Globe, Pill } from 'lucide-react';
+import React, { useEffect } from 'react';
+import { Phone, Mic, Camera, MapPin, AlertOctagon, UserPlus, Calculator, Edit3, Pin, Globe, Pill, Volume2, VolumeX, Bot } from 'lucide-react';
 import { CardButton } from '../components/CardButton';
 import { useAppContext } from '../contexts/AppContext';
 import { getMedicineIcon, formatMedicineTime } from '../utils/timeUtils';
+import { FEATURES } from '../config/featureFlags';
 
 export const Home = ({ navigate }) => {
-  const { notes, medicines, speak, t } = useAppContext();
+  const { notes, medicines, speak, speakFeedback, voiceGuidance, setVoiceGuidance, t } = useAppContext();
   const pinnedNotes = (Array.isArray(notes) ? notes : []).filter(n => n.pinned).slice(0, 3);
   
   // Get upcoming medicines for today
@@ -13,14 +14,37 @@ export const Home = ({ navigate }) => {
   const upcomingMedicines = (Array.isArray(medicines) ? medicines : []).filter(m => m.lastTakenDate !== todayString);
 
   const handleNavigate = (page, announcement) => {
-    speak(announcement);
     navigate(page);
   };
 
   return (
     <div className="app-container">
-      <div style={{ marginBottom: '24px', textAlign: 'center' }}>
-        <h1 className="text-huge" style={{ color: 'var(--primary-color)' }}>{t('appTitle')}</h1>
+      <div style={{ marginBottom: '24px', textAlign: 'center', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px' }}>
+        <h1 className="text-huge" style={{ color: 'var(--primary-color)', margin: 0 }}>{t('appTitle')}</h1>
+        <button 
+          onClick={() => {
+            const newState = !voiceGuidance;
+            setVoiceGuidance(newState);
+            if (newState) speak('Voice Guidance ON');
+          }}
+          style={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '12px 24px',
+            borderRadius: '50px',
+            backgroundColor: voiceGuidance ? 'var(--success-color)' : '#eee',
+            color: voiceGuidance ? '#fff' : 'var(--text-secondary)',
+            border: 'none',
+            fontSize: '1.2rem',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            boxShadow: '0 2px 4px rgba(0,0,0,0.1)'
+          }}
+        >
+          {voiceGuidance ? <Volume2 size={24} /> : <VolumeX size={24} />}
+          {voiceGuidance ? 'Voice Guidance ON' : 'Voice Guidance OFF'}
+        </button>
       </div>
 
       {/* Today's Medicines Widget */}
@@ -69,6 +93,19 @@ export const Home = ({ navigate }) => {
       </div>
 
       <div className="grid-2col" style={{ marginBottom: '24px' }}>
+        {FEATURES.AI_ASSISTANT && (
+          <button 
+            className="btn-massive btn-primary"
+            onClick={() => handleNavigate('NannaAI', '')}
+            style={{ minHeight: '120px', gridColumn: 'span 2', display: 'flex', flexDirection: 'row', gap: '16px', alignItems: 'center', marginBottom: '8px' }}
+          >
+            <Bot size={64} className="icon" />
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
+              <span className="text-huge">🤖 Nanna AI Assistant</span>
+              <span className="text-large" style={{ opacity: 0.8 }}>Tap and Speak</span>
+            </div>
+          </button>
+        )}
         <CardButton 
           icon={Pill} 
           title={t('medicineReminder')} 

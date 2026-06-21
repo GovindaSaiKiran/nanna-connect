@@ -5,6 +5,7 @@ import { useSpeechSynthesis } from '../hooks/useSpeechSynthesis';
 import { useMedicines } from '../hooks/useMedicines';
 import { useEmergency } from '../hooks/useEmergency';
 import { getTranslation } from '../i18n';
+import { FEATURES } from '../config/featureFlags';
 
 const AppContext = createContext();
 
@@ -52,6 +53,29 @@ export const AppProvider = ({ children }) => {
   const t = (key) => getTranslation(activeLanguage, key);
 
   const { speak, stop } = useSpeechSynthesis(activeLanguage);
+
+  const [voiceGuidance, setVoiceGuidanceState] = useState(() => {
+    try {
+      const stored = window.localStorage.getItem('nanna_voice_guidance');
+      if (stored !== null) return JSON.parse(stored);
+    } catch (e) {}
+    return true; // Default ON
+  });
+
+  const setVoiceGuidance = (value) => {
+    setVoiceGuidanceState(value);
+    try {
+      window.localStorage.setItem('nanna_voice_guidance', JSON.stringify(value));
+      if (!value) stop(); // Stop immediately if toggled off
+    } catch (e) {}
+  };
+
+  const speakFeedback = (text) => {
+    if (!FEATURES.VOICE_GUIDANCE) return;
+    if (voiceGuidance) {
+      speak(text);
+    }
+  };
 
   // Medicine Alert Polling
   const [activeAlert, setActiveAlert] = useState(null);
@@ -103,6 +127,9 @@ export const AppProvider = ({ children }) => {
       ...medicinesHook,
       ...emergencyHook,
       speak, 
+      speakFeedback,
+      voiceGuidance,
+      setVoiceGuidance,
       stopSpeak: stop,
       language: activeLanguage,
       hasCompletedOnboarding: language !== null,

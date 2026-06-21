@@ -155,5 +155,11 @@ export default {
   selectFromExisting: "Select From Existing Contacts",
   sosMessage: "I need help. Please contact me immediately.",
   remove: "Remove",
-  relationship: "Relationship"
+  relationship: "Relationship",
+  english: "English",
+  localNameLabel: "Local Name (Optional)",
+  nameEnglishPlaceholder: "Name in English",
+  localNamePlaceholder: "e.g. Govinda",
+  update: "Update",
+  editContactTitle: "Edit Contact"
 };

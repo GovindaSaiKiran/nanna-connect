@@ -5,7 +5,7 @@ import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 
 export const QuickNotes = ({ navigate }) => {
   const { notes, addNote, removeNote, togglePin, speak, t, language } = useAppContext();
-  const { isListening, transcript, startListening, stopListening, setTranscript } = useSpeechRecognition(language);
+  const { isListening, transcript, interimTranscript, startListening, stopListening, setTranscript } = useSpeechRecognition(language, { continuous: true });
   
   const [text, setText] = useState('');
   const [searchQuery, setSearchQuery] = useState('');
@@ -31,6 +31,36 @@ export const QuickNotes = ({ navigate }) => {
 
   return (
     <div className="app-container">
+      {isListening && (
+        <div style={{
+          position: 'fixed',
+          top: 0, left: 0, right: 0, bottom: 0,
+          backgroundColor: 'rgba(0,0,0,0.85)',
+          zIndex: 1000,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '24px',
+          color: 'white'
+        }}>
+          <div className="mic-animation" style={{ marginBottom: '48px' }}>
+            <Mic size={100} color="var(--success-color)" />
+          </div>
+          <h2 className="text-huge" style={{ marginBottom: '24px' }}>🎤 {t('listening') || 'Listening...'}</h2>
+          <p className="text-large" style={{ textAlign: 'center', marginBottom: '48px', minHeight: '80px', color: '#ddd' }}>
+            {interimTranscript || t('speakToWrite')}
+          </p>
+          <button 
+            className="btn-massive btn-danger"
+            onClick={stopListening}
+            style={{ width: '100%', maxWidth: '400px' }}
+          >
+            <span className="text-huge">⏹ {t('stop') || 'Stop Recording'}</span>
+          </button>
+        </div>
+      )}
+
       <div className="screen-header" style={{ paddingBottom: '16px' }}>
         <button className="back-btn" onClick={() => navigate('Home')}>
           <ArrowLeft size={32} />

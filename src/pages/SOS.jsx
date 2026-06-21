@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Star, Phone, ArrowLeft, XCircle } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 import { sendEmergencyWhatsApp } from '../utils/emergencyUtils';
 
 export const SOS = ({ navigate }) => {
-  const { getPrimaryContact, getSecondaryContact, defaultServices, speak, t } = useAppContext();
+  const { getPrimaryContact, getSecondaryContact, defaultServices, speak, speakFeedback, t } = useAppContext();
   const [isProcessing, setIsProcessing] = useState(false);
 
   const primaryContact = getPrimaryContact();
@@ -18,7 +18,7 @@ export const SOS = ({ navigate }) => {
     if (!primaryContact) return;
     
     setIsProcessing(true);
-    speak(t('call') + ' ' + t('primaryContact'));
+    speakFeedback(t('call') + ' ' + t('primaryContact'));
 
     // Step 1: Open WhatsApp in a new tab with the location and SOS message
     await sendEmergencyWhatsApp(primaryContact.phone, t('sosMessage'));
@@ -35,7 +35,7 @@ export const SOS = ({ navigate }) => {
     if (!secondaryContact) return;
     
     setIsProcessing(true);
-    speak(t('call') + ' ' + t('secondaryContact'));
+    speakFeedback(t('call') + ' ' + t('secondaryContact'));
 
     await sendEmergencyWhatsApp(secondaryContact.phone, t('sosMessage'));
     window.location.href = `tel:${secondaryContact.phone}`;
@@ -47,7 +47,7 @@ export const SOS = ({ navigate }) => {
 
   const handleServiceEmergency = (service) => {
     if (!service) return;
-    speak(t('call') + ' ' + (t(service.id) || service.name));
+    speakFeedback(t('call') + ' ' + (t(service.id) || service.name));
     window.location.href = `tel:${service.phone}`;
   };
 

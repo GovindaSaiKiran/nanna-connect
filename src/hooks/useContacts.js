@@ -1,42 +1,54 @@
+import { useEffect } from 'react';
 import { useLocalStorage } from './useLocalStorage';
+import { fuzzyMatchScore } from '../utils/fuzzyMatch';
+import { transliterate } from '../services/transliterationEngine';
 
 export const useContacts = () => {
   const [contacts, setContacts] = useLocalStorage('nanna_contacts', []);
 
+  // Soft delete purge logic
+  useEffect(() => {
+    const thirtyDays = 30 * 24 * 60 * 60 * 1000;
+    const now = Date.now();
+    
+    setContacts(prev => {
+      if (!Array.isArray(prev)) return [];
+      let changed = false;
+      const next = prev.filter(c => {
+        if (c.isDeleted && c.deletedAt && (now - c.deletedAt > thirtyDays)) {
+          changed = true;
+          return false;
+        }
+        return true;
+      });
+      return changed ? next : prev;
+    });
+  }, [setContacts]);
+
+  const activeContacts = (Array.isArray(contacts) ? contacts : []).filter(c => !c.isDeleted);
+
   const addContact = (contact) => {
+    console.log('[useContacts] Adding Contact:', contact);
     setContacts((prev) => {
-      // Check for duplicate number
-      const existingIndex = (Array.isArray(prev) ? prev : []).findIndex(c => c.phone === contact.phone);
-      if (existingIndex >= 0) {
-        // Update existing
-        const newContacts = [...(Array.isArray(prev) ? prev : [])];
-        newContacts[existingIndex] = { ...newContacts[existingIndex], ...contact };
-        return newContacts;
-      }
       return [...(Array.isArray(prev) ? prev : []), { id: Date.now().toString(), ...contact }];
     });
   };
 
-  const removeContact = (id) => {
-    setContacts(prev => (Array.isArray(prev) ? prev : []).filter(c => c.id !== id));
-  };
-
-  const findContactByVoice = (transcript) => {
-    if (!transcript) return null;
-    const lowerTranscript = transcript.toLowerCase();
-    
-    // Exact or partial name match
-    const matches = (Array.isArray(contacts) ? contacts : []).filter(c => {
-      const lowerName = c.name?.toLowerCase() || '';
-      // Simple fuzzy matching: if transcript contains the name or name contains transcript
-      return lowerName && (lowerTranscript.includes(lowerName) || lowerName.includes(lowerTranscript));
+  const updateContact = (id, updatedContact) => {
+    console.log('[useContacts] Updating Contact:', id, updatedContact);
+    setContacts(prev => {
+      return (Array.isArray(prev) ? prev : []).map(c => 
+        c.id === id ? { ...c, ...updatedContact } : c
+      );
     });
-
-    if (matches.length > 0) {
-      return matches[0]; // For simplicity, return first match. Conflict resolution can be added later if needed.
-    }
-    return null;
   };
 
-  return { contacts, addContact, removeContact, findContactByVoice };
+  const removeContact = (id) => {
+    console.log('[useContacts] Removing Contact:', id);
+    setContacts(prev => (Array.isArray(prev) ? prev : []).map(c => 
+      c.id === id ? { ...c, isDeleted: true, deletedAt: Date.now() } : c
+    ));
+  };
+
+  return { contacts: activeContacts, allContacts: contacts, addContact, updateContact, removeContact };
 };

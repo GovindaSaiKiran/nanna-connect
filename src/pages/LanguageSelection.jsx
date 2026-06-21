@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useAppContext } from '../contexts/AppContext';
 
 export const LanguageSelection = ({ navigate }) => {
-  const { setLanguage, speak, t } = useAppContext();
+  const { setLanguage, speak, speakFeedback, t } = useAppContext();
 
   const languages = [
     { code: 'en-IN', name: 'English', native: 'English', flag: '🇮🇳' },
@@ -15,7 +15,7 @@ export const LanguageSelection = ({ navigate }) => {
 
   const handleSelect = (lang) => {
     setLanguage(lang.code);
-    speak(`${lang.native} selected`);
+    speakFeedback(`${lang.native} selected`);
     navigate('Home');
   };
 

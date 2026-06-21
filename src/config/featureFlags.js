@@ -1,0 +1,8 @@
+export const FEATURES = {
+  AI_ASSISTANT: true,
+  GEMINI_FALLBACK: true,
+  LOCAL_COMMANDS: true,
+  LOCAL_MATH_ENGINE: true,
+  RELATIONSHIP_INTELLIGENCE: true,
+  VOICE_GUIDANCE: true
+};

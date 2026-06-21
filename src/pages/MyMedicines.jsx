@@ -1,10 +1,10 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { ArrowLeft, Pill, Plus, Edit2, Trash2, History } from 'lucide-react';
 import { useAppContext } from '../contexts/AppContext';
 import { getMedicineIcon, formatMedicineTime } from '../utils/timeUtils';
 
 export const MyMedicines = ({ navigate }) => {
-  const { medicines, deleteMedicine, speak, t } = useAppContext();
+  const { medicines, deleteMedicine, speak, speakFeedback, t } = useAppContext();
 
   const handleDelete = (id, name) => {
     if (window.confirm(t('delete') + ' ' + name + '?')) {

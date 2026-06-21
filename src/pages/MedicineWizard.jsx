@@ -5,7 +5,7 @@ import { useSpeechRecognition } from '../hooks/useSpeechRecognition';
 import { getMedicineIcon, formatMedicineTime } from '../utils/timeUtils';
 
 export const MedicineWizard = ({ navigate, editData }) => {
-  const { addMedicine, updateMedicine, speak, t, language } = useAppContext();
+  const { addMedicine, updateMedicine, speak, speakFeedback, t, language } = useAppContext();
   const { isListening, transcript, startListening, stopListening, setTranscript } = useSpeechRecognition(language);
 
   const [step, setStep] = useState(1);
@@ -20,6 +20,28 @@ export const MedicineWizard = ({ navigate, editData }) => {
       setTranscript('');
     }
   }, [transcript, isListening, step, setTranscript]);
+
+  const [isTransitioning, setIsTransitioning] = useState(false);
+
+  const handleTypeSelect = (selectedType) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setType(selectedType);
+    setTimeout(() => {
+      setStep(prev => prev + 1);
+      setIsTransitioning(false);
+    }, 400);
+  };
+
+  const handleTimeSelect = (selectedTime) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTime(selectedTime);
+    setTimeout(() => {
+      setStep(prev => prev + 1);
+      setIsTransitioning(false);
+    }, 400);
+  };
 
   const handleNext = () => {
     if (step === 1 && !name.trim()) return;
@@ -40,7 +62,7 @@ export const MedicineWizard = ({ navigate, editData }) => {
     
     const template = t('voiceTemplate_saved');
     const announcement = template.replace('{medicine}', name);
-    speak(announcement);
+    speakFeedback(announcement);
     
     setTimeout(() => {
       navigate('MyMedicines');
@@ -154,28 +176,31 @@ export const MedicineWizard = ({ navigate, editData }) => {
             <h2 className="text-huge">Select Type</h2>
             
             <button 
-              className={`btn-massive ${type === 'morning' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ minHeight: '150px' }}
-              onClick={() => { setType('morning'); handleNext(); }}
+              className={`btn-massive ${type === 'morning' ? 'btn-selected' : 'btn-outline'}`}
+              style={{ minHeight: '150px', position: 'relative' }}
+              onClick={() => handleTypeSelect('morning')}
             >
+              {type === 'morning' && <CheckCircle size={32} style={{ position: 'absolute', top: 16, right: 16, color: '#fff' }} />}
               <span style={{ fontSize: '4rem', marginBottom: '16px' }}>🌅</span>
               <span className="text-huge">{t('morningMedicine')}</span>
             </button>
 
             <button 
-              className={`btn-massive ${type === 'afternoon' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ minHeight: '150px' }}
-              onClick={() => { setType('afternoon'); handleNext(); }}
+              className={`btn-massive ${type === 'afternoon' ? 'btn-selected' : 'btn-outline'}`}
+              style={{ minHeight: '150px', position: 'relative' }}
+              onClick={() => handleTypeSelect('afternoon')}
             >
+              {type === 'afternoon' && <CheckCircle size={32} style={{ position: 'absolute', top: 16, right: 16, color: '#fff' }} />}
               <span style={{ fontSize: '4rem', marginBottom: '16px' }}>☀️</span>
               <span className="text-huge">{t('afternoonMedicine')}</span>
             </button>
 
             <button 
-              className={`btn-massive ${type === 'night' ? 'btn-primary' : 'btn-outline'}`}
-              style={{ minHeight: '150px', backgroundColor: type === 'night' ? '#2c3e50' : '', color: type === 'night' ? '#fff' : '' }}
-              onClick={() => { setType('night'); handleNext(); }}
+              className={`btn-massive ${type === 'night' ? 'btn-selected' : 'btn-outline'}`}
+              style={{ minHeight: '150px', position: 'relative' }}
+              onClick={() => handleTypeSelect('night')}
             >
+              {type === 'night' && <CheckCircle size={32} style={{ position: 'absolute', top: 16, right: 16, color: '#fff' }} />}
               <span style={{ fontSize: '4rem', marginBottom: '16px' }}>🌙</span>
               <span className="text-huge">{t('nightMedicine')}</span>
             </button>
@@ -196,14 +221,15 @@ export const MedicineWizard = ({ navigate, editData }) => {
               {getTimesForType().map(tObj => (
                 <button
                   key={tObj.label}
-                  className={`btn-massive ${time === tObj.label ? 'btn-primary' : 'btn-outline'}`}
-                  style={{ minHeight: '100px', flexDirection: 'row', justifyContent: 'flex-start', padding: '0 32px' }}
-                  onClick={() => { setTime(tObj.label); handleNext(); }}
+                  className={`btn-massive ${time === tObj.label ? 'btn-selected' : 'btn-outline'}`}
+                  style={{ minHeight: '100px', flexDirection: 'row', justifyContent: 'flex-start', padding: '0 32px', position: 'relative' }}
+                  onClick={() => handleTimeSelect(tObj.label)}
                 >
                   <span style={{ fontSize: '2.5rem', marginRight: '16px' }}>🕒</span>
                   <span className="text-large" style={{ fontWeight: time === tObj.label ? 'bold' : 'normal' }}>
                     {getMedicineIcon(type)} {formatMedicineTime(type, tObj.label, t)}
                   </span>
+                  {time === tObj.label && <CheckCircle size={32} style={{ position: 'absolute', right: '32px', color: '#fff' }} />}
                 </button>
               ))}
             </div>

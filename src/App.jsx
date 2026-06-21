@@ -14,6 +14,7 @@ import { LanguageSelection } from './pages/LanguageSelection';
 import { MyMedicines } from './pages/MyMedicines';
 import { MedicineWizard } from './pages/MedicineWizard';
 import { MedicineHistory } from './pages/MedicineHistory';
+import { NannaAI } from './pages/NannaAI';
 import { MedicineAlert } from './components/MedicineAlert';
 import { useAppContext } from './contexts/AppContext';
 
@@ -32,7 +33,7 @@ function App() {
   }, [hasCompletedOnboarding]);
 
   const navigateTo = (screen, props = null) => {
-    if (screen === 'MedicineWizard' || screen === 'AddEmergencyContact') {
+    if (screen === 'MedicineWizard' || screen === 'AddEmergencyContact' || screen === 'AddContact' || screen === 'CallContact') {
       setWizardProps(props);
     }
     setCurrentScreen(screen);
@@ -45,7 +46,7 @@ function App() {
       case 'Home':
         return <Home navigate={navigateTo} />;
       case 'CallContact':
-        return <CallContact navigate={navigateTo} />;
+        return <CallContact navigate={navigateTo} matchingContacts={wizardProps} />;
       case 'VoiceMessage':
         return <VoiceMessage navigate={navigateTo} />;
       case 'SendPhoto':
@@ -59,7 +60,7 @@ function App() {
       case 'AddEmergencyContact':
         return <AddEmergencyContact navigate={navigateTo} editData={wizardProps} />;
       case 'AddContact':
-        return <AddContact navigate={navigateTo} />;
+        return <AddContact navigate={navigateTo} editData={wizardProps} />;
       case 'Calculator':
         return <Calculator navigate={navigateTo} />;
       case 'QuickNotes':
@@ -70,6 +71,8 @@ function App() {
         return <MedicineWizard navigate={navigateTo} editData={wizardProps} />;
       case 'MedicineHistory':
         return <MedicineHistory navigate={navigateTo} />;
+      case 'NannaAI':
+        return <NannaAI navigate={navigateTo} />;
       default:
         return <Home navigate={navigateTo} />;
     }
