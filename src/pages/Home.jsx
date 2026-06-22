@@ -80,7 +80,7 @@ export const Home = ({ navigate }) => {
                   </span>
                 </div>
                 <span className="text-large" style={{ color: 'var(--primary-color)', fontWeight: 'bold' }}>
-                  {formatMedicineTime(med.type, med.time, t)}
+                  {formatMedicineTime(med.time, t)}
                 </span>
               </div>
             ))}
@@ -101,8 +101,8 @@ export const Home = ({ navigate }) => {
           >
             <Bot size={64} className="icon" />
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-start' }}>
-              <span className="text-huge">🤖 Nanna AI Assistant</span>
-              <span className="text-large" style={{ opacity: 0.8 }}>Tap and Speak</span>
+              <span className="text-huge">🤖 {t('nannaAiAssistant') || 'Nanna AI Assistant'}</span>
+              <span className="text-large" style={{ opacity: 0.8 }}>{t('speakToWrite') || 'Tap and Speak'}</span>
             </div>
           </button>
         )}
@@ -138,10 +138,10 @@ export const Home = ({ navigate }) => {
         />
         <CardButton 
           icon={AlertOctagon} 
-          title={t('sos')} 
+          title={t('emergencyMode') || t('sos')} 
           subtitle=""
           variant="danger"
-          onClick={() => handleNavigate('SOS', t('sos'))} 
+          onClick={() => handleNavigate('EmergencyMode', t('emergencyMode') || t('sos'))} 
         />
         <CardButton 
           icon={UserPlus} 

@@ -5,12 +5,15 @@ import { VoiceMessage } from './pages/VoiceMessage';
 import { SendPhoto } from './pages/SendPhoto';
 import { ShareLocation } from './pages/ShareLocation';
 import { SOS } from './pages/SOS';
+import { EmergencyMode } from './pages/EmergencyMode';
 import { EmergencyContacts } from './pages/EmergencyContacts';
 import { AddEmergencyContact } from './pages/AddEmergencyContact';
 import { AddContact } from './pages/AddContact';
 import { Calculator } from './pages/Calculator';
 import { QuickNotes } from './pages/QuickNotes';
 import { LanguageSelection } from './pages/LanguageSelection';
+import { SystemCheck } from './pages/SystemCheck';
+import { CommandHistory } from './pages/CommandHistory';
 import { MyMedicines } from './pages/MyMedicines';
 import { MedicineWizard } from './pages/MedicineWizard';
 import { MedicineHistory } from './pages/MedicineHistory';
@@ -42,7 +45,12 @@ function App() {
   const renderScreen = () => {
     switch (currentScreen) {
       case 'LanguageSelection':
+      case 'Settings':
         return <LanguageSelection navigate={navigateTo} />;
+      case 'SystemCheck':
+        return <SystemCheck navigate={navigateTo} />;
+      case 'CommandHistory':
+        return <CommandHistory navigate={navigateTo} />;
       case 'Home':
         return <Home navigate={navigateTo} />;
       case 'CallContact':
@@ -55,6 +63,8 @@ function App() {
         return <ShareLocation navigate={navigateTo} />;
       case 'SOS':
         return <SOS navigate={navigateTo} />;
+      case 'EmergencyMode':
+        return <EmergencyMode navigate={navigateTo} />;
       case 'EmergencyContacts':
         return <EmergencyContacts navigate={navigateTo} />;
       case 'AddEmergencyContact':

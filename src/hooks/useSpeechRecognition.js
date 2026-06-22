@@ -1,4 +1,5 @@
 import { useState, useCallback, useEffect, useRef } from 'react';
+import { useAppContext } from '../contexts/AppContext';
 
 export const useSpeechRecognition = (language, options = {}) => {
   const { continuous = false } = options;
@@ -7,6 +8,8 @@ export const useSpeechRecognition = (language, options = {}) => {
   const [interimTranscript, setInterimTranscript] = useState('');
   const [error, setError] = useState(null);
   
+  const { logVoiceCommand } = useAppContext();
+
   const recognitionRef = useRef(null);
   const silenceTimerRef = useRef(null);
 
@@ -71,6 +74,11 @@ export const useSpeechRecognition = (language, options = {}) => {
         setInterimTranscript(interimTrans);
         
         if (finalTrans) {
+          if (options.onFinal) {
+            options.onFinal(finalTrans);
+          }
+          logVoiceCommand(finalTrans);
+          
           if (continuous) {
             setTranscript(prev => prev + ' ' + finalTrans);
           } else {

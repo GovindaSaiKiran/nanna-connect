@@ -8,7 +8,7 @@ import { localGeminiService } from '../services/localGeminiService';
 import { FEATURES } from '../config/featureFlags';
 
 export const NannaAI = ({ navigate }) => {
-  const { speakFeedback, language, contacts } = useAppContext();
+  const { speakFeedback, language, contacts, t } = useAppContext();
   const { isListening, transcript, interimTranscript, error, startListening, stopListening, setTranscript } = useSpeechRecognition(language);
   const [status, setStatus] = useState('idle'); // 'idle', 'processing', 'success', 'error'
   const [response, setResponse] = useState('');
@@ -55,9 +55,9 @@ export const NannaAI = ({ navigate }) => {
         }
 
         if (!FEATURES.GEMINI_FALLBACK) {
-            const msg = '❌ Command Not Recognized. Internet connection may be required.';
+            const msg = t('commandNotRecognized') || '❌ Command Not Recognized. Please try again.';
             setResponse(msg);
-            speakFeedback('I could not understand.');
+            speakFeedback(t('commandNotRecognized') || 'I could not understand.');
             setStatus('error');
             return;
         }
@@ -122,7 +122,7 @@ export const NannaAI = ({ navigate }) => {
           navigate('CallContact', matchingContacts);
         }, 1500);
       } else {
-        const msg = `❌ Command Not Recognized. I could not find a contact for ${label}.`;
+        const msg = t('commandNotRecognized') || `❌ Command Not Recognized. I could not find a contact for ${label}.`;
         setResponse(msg);
         speakFeedback(msg);
         setStatus('error');
@@ -137,8 +137,8 @@ export const NannaAI = ({ navigate }) => {
       speakFeedback(result.response);
       setTimeout(() => setStatus('idle'), 3000);
     } else {
-      setResponse('❌ Command Not Recognized.');
-      speakFeedback('I am not sure how to help with that.');
+      setResponse(t('commandNotRecognized') || '❌ Command Not Recognized. Please try again.');
+      speakFeedback(t('commandNotRecognized') || 'I am not sure how to help with that.');
       setStatus('error');
     }
   };
@@ -164,7 +164,7 @@ export const NannaAI = ({ navigate }) => {
         <button className="back-btn" onClick={() => navigate('Home')}>
           <ArrowLeft size={32} />
         </button>
-        <h1 className="screen-title" style={{ color: 'var(--primary-color)' }}>Nanna AI Assistant</h1>
+        <h1 className="screen-title" style={{ color: 'var(--primary-color)' }}>{t('nannaAiAssistant') || 'Nanna AI Assistant'}</h1>
       </div>
 
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>

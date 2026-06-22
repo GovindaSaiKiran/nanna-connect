@@ -26,26 +26,53 @@ export const useMedicines = () => {
   };
 
   const markTaken = (medicine) => {
-    // Record in history
     setHistory(prev => [
       {
         id: Date.now().toString(),
         medicineId: medicine.id,
         name: medicine.name,
         type: medicine.type,
+        dosage: medicine.dosage,
         scheduledTime: medicine.time,
-        takenAt: new Date().toISOString()
+        takenAt: new Date().toISOString(),
+        status: 'taken'
       },
       ...(Array.isArray(prev) ? prev : [])
     ]);
 
-    // We don't remove it from active medicines because it repeats every day,
-    // but we need a way to know it was taken today so the alarm doesn't keep ringing.
-    // We update the 'lastTakenDate' on the medicine itself.
     setMedicines(prev => {
       const arr = Array.isArray(prev) ? prev : [];
       const todayString = new Date().toDateString();
-      return arr.map(m => m.id === medicine.id ? { ...m, lastTakenDate: todayString } : m);
+      return arr.map(m => m.id === medicine.id ? { ...m, lastTakenDate: todayString, lastTriggeredDate: null } : m);
+    });
+  };
+
+  const markMissed = (medicine) => {
+    setHistory(prev => [
+      {
+        id: Date.now().toString(),
+        medicineId: medicine.id,
+        name: medicine.name,
+        type: medicine.type,
+        dosage: medicine.dosage,
+        scheduledTime: medicine.time,
+        missedAt: new Date().toISOString(),
+        status: 'missed'
+      },
+      ...(Array.isArray(prev) ? prev : [])
+    ]);
+
+    setMedicines(prev => {
+      const arr = Array.isArray(prev) ? prev : [];
+      const todayString = new Date().toDateString();
+      return arr.map(m => m.id === medicine.id ? { ...m, lastMissedDate: todayString, lastTriggeredDate: null } : m);
+    });
+  };
+
+  const setTriggered = (medicineId) => {
+    setMedicines(prev => {
+      const arr = Array.isArray(prev) ? prev : [];
+      return arr.map(m => m.id === medicineId ? { ...m, lastTriggeredDate: new Date().toISOString() } : m);
     });
   };
 
@@ -61,6 +88,8 @@ export const useMedicines = () => {
     addMedicine, 
     updateMedicine, 
     deleteMedicine, 
-    markTaken 
+    markTaken,
+    markMissed,
+    setTriggered
   };
 };

@@ -1,33 +1,51 @@
-export const getMedicineIcon = (type) => {
-  if (type === 'morning') return '🌅 ';
-  if (type === 'afternoon') return '☀️ ';
-  if (type === 'night') return '🌙 ';
-  if (type === 'day') return '☀️ '; // fallback for old data
-  return '💊 ';
+export const classifyTime = (time24) => {
+  if (!time24) return { period: 'morning', icon: '🌅' };
+  const match = time24.match(/^(\d{2}):(\d{2})/);
+  if (!match) return { period: 'morning', icon: '🌅' };
+  const hours = parseInt(match[1], 10);
+
+  if (hours >= 5 && hours < 12) return { period: 'morning', icon: '🌅' };
+  if (hours >= 12 && hours < 17) return { period: 'afternoon', icon: '☀️' };
+  if (hours >= 17 && hours < 21) return { period: 'evening', icon: '🌇' };
+  return { period: 'night', icon: '🌙' };
 };
 
-export const formatMedicineTime = (type, internalTime, t) => {
-  if (!internalTime) return '';
+// Legacy support for older codebase components
+export const getTimeClassification = (time24) => classifyTime(time24).period;
+export const getMedicineIcon = (type) => {
+  if (type === 'morning') return '🌅';
+  if (type === 'afternoon') return '☀️';
+  if (type === 'evening') return '🌇';
+  if (type === 'night') return '🌙';
+  if (type === 'day') return '☀️'; // fallback for old data
+  return '💊';
+};
+
+export const formatMedicineTime = (time24, t) => {
+  if (!time24) return '';
   
-  // Parse internal time (e.g. "06:00 AM" or "09:00 PM")
-  const match = internalTime.match(/^(\d{2}):\d{2}\s+(AM|PM)$/);
-  if (!match) return internalTime; // fallback if format changes
+  // Legacy support for "08:00 AM" format
+  let hours, mins;
+  const legacyMatch = time24.match(/^(\d{2}):(\d{2})\s+(AM|PM)$/);
+  if (legacyMatch) {
+    hours = parseInt(legacyMatch[1], 10);
+    mins = legacyMatch[2];
+    if (legacyMatch[3] === 'PM' && hours < 12) hours += 12;
+    if (legacyMatch[3] === 'AM' && hours === 12) hours = 0;
+  } else {
+    const match = time24.match(/^(\d{2}):(\d{2})/);
+    if (!match) return time24;
+    hours = parseInt(match[1], 10);
+    mins = match[2];
+  }
   
-  let hour12 = parseInt(match[1], 10);
+  const timeInfo = classifyTime(`${hours.toString().padStart(2, '0')}:${mins}`);
   
-  // Format period using translation keys
-  let periodKey = '';
-  if (type === 'morning') periodKey = 'morning';
-  else if (type === 'afternoon') periodKey = 'afternoon';
-  else if (type === 'night') periodKey = 'night';
-  else if (type === 'day') periodKey = 'morning'; // fallback
+  const periodText = t(timeInfo.period) || timeInfo.period;
   
-  const periodText = t(periodKey);
-  const isSingular = hour12 === 1;
-  const timeFormatTemplate = isSingular ? t('timeFormat_single') : t('timeFormat_plural');
+  let hours12 = hours % 12;
+  hours12 = hours12 ? hours12 : 12; // '0' should be '12'
+  const formattedHours = hours12.toString().padStart(2, '0');
   
-  // Some languages might not have distinct plural rules or use same template
-  const template = timeFormatTemplate || '{period} {hour} O\'Clock';
-  
-  return template.replace('{period}', periodText).replace('{hour}', hour12.toString());
+  return `${timeInfo.icon} ${periodText} - ${formattedHours}:${mins}`;
 };

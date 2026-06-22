@@ -6,7 +6,18 @@ const commandDictionary = [
   { action: 'navigate', target: 'SOS', keywords: ['sos', 'ఎస్ ఓ ఎస్', 'ఎస్ఓఎస్', 'emergency', 'ఎమర్జెన్సీ', 'आपातकाल', 'அவசரம்', 'ತುರ್ತು', 'അടിയന്തരാവസ്ഥ'] },
   { action: 'navigate', target: 'MyMedicines', keywords: ['medicines', 'medicine', 'మెడిసిన్', 'మందులు', 'दवाइयां', 'மருந்துகள்', 'ಔಷಧಿಗಳು', 'മരുന്നുകൾ'] },
   { action: 'navigate', target: 'QuickNotes', keywords: ['notes', 'నోట్స్', 'नोट्स', 'குறிப்புகள்', 'ಟಿಪ್ಪಣಿಗಳು', 'കുറിപ്പുകൾ'] },
-  { action: 'navigate', target: 'Calculator', keywords: ['calculator', 'కాల్కులేటర్', 'कैलकुलेटर', 'கால்குலேட்டர்', 'ಕ್ಯಾಲ್ಕುಲೇಟರ್', 'കാൽക്കുലേറ്റർ'] },
+  { 
+    action: 'navigate', 
+    target: 'Calculator', 
+    keywords: [
+      'calculator', 'calculate', 'math', 
+      'క్యాలిక్యులేటర్', 'కాల్కులేటర్', 'లెక్కలు', 
+      'कैलकुलेटर', 'हिसाब', 
+      'கால்குலேட்டர்', 'கணக்கீடு', 
+      'ಕ್ಯಾಲ್ಕುಲೇಟರ್', 'ಲೆಕ್ಕ', 
+      'കാൽക്കുലേറ്റർ', 'കണക്കുകൂട്ടൽ'
+    ] 
+  },
   { action: 'navigate', target: 'LanguageSelection', keywords: ['language', 'భాష', 'भाषा', 'மொழி', 'ಭಾಷೆ', 'ഭാഷ'] },
   { action: 'navigate', target: 'EmergencyContacts', keywords: ['contacts', 'కాంటాక్ట్స్', 'संपर्क', 'தொடர்புகள்', 'ಸಂಪರ್ಕಗಳು', 'കോൺടാക്റ്റുകൾ'] },
   // Actions
