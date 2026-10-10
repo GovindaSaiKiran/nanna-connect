@@ -12,7 +12,7 @@ export default {
   search: "தேடு",
 
   // Home
-  appTitle: "Elder Use Control",
+  appTitle: "Elder Helper",
   callContact: "அழைக்க",
   callContactSubtitle: "Call Contact",
   callContactVoice: "அழைக்க ஒருவரை தேர்ந்தெடுக்கவும்",

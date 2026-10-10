@@ -12,7 +12,7 @@ export default {
   search: "खोजें",
 
   // Home
-  appTitle: "Elder Use Control",
+  appTitle: "Elder Helper",
   callContact: "कॉल करें",
   callContactSubtitle: "Call Contact",
   callContactVoice: "कॉल करने के लिए संपर्क चुनें",
