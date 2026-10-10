@@ -28,7 +28,7 @@ export class ErrorBoundary extends React.Component {
           textAlign: 'center'
         }}>
           <h1 style={{ color: '#dc3545', fontSize: '2rem', marginBottom: '16px' }}>
-            Nanna Connect encountered an error.
+            Elder Helper encountered an error.
           </h1>
           <p style={{ fontSize: '1.5rem', marginBottom: '24px' }}>
             Please refresh the application.

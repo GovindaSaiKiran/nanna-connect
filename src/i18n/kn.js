@@ -12,7 +12,7 @@ export default {
   search: "ಹುಡುಕು",
 
   // Home
-  appTitle: "Elder Use Control",
+  appTitle: "Elder Helper",
   callContact: "ಕರೆ ಮಾಡಿ",
   callContactSubtitle: "Call Contact",
   callContactVoice: "ಕರೆ ಮಾಡಲು ಸಂಪರ್ಕವನ್ನು ಆರಿಸಿ",

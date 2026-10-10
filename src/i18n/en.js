@@ -12,7 +12,7 @@ export default {
   search: "Search",
 
   // Home
-  appTitle: "Elder Use Control",
+  appTitle: "Elder Helper",
   callContact: "Call Contact",
   callContactSubtitle: "Call Contact",
   callContactVoice: "Select a contact to call",
@@ -123,7 +123,7 @@ export default {
   everyDay: "Every Day",
   edit: "Edit",
   delete: "Delete",
-  reliabilityNotice: "For best reminder performance, keep Nanna Connect installed and running in the background.",
+  reliabilityNotice: "For best reminder performance, keep Elder Helper installed and running in the background.",
   medicineHistory: "Medicine History",
   takenToday: "Taken Today",
   bpTablet: "BP Tablet",

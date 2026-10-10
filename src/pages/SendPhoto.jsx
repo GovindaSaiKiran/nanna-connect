@@ -27,8 +27,8 @@ export const SendPhoto = ({ navigate }) => {
       try {
         await navigator.share({
           files: [selectedFile],
-          title: 'Photo from Nanna Connect',
-          text: 'Sending a photo via Nanna Connect'
+          title: 'Photo from Elder Helper',
+          text: 'Sending a photo via Elder Helper'
         });
         speak(t('photoSent'));
         navigate('Home');

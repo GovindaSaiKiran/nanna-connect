@@ -12,7 +12,7 @@ export default {
   search: "వెతకండి",
 
   // Home
-  appTitle: "Elder Use Control",
+  appTitle: "Elder Helper",
   callContact: "కాల్ చేయండి",
   callContactSubtitle: "Call Contact",
   callContactVoice: "కాల్ చేయడానికి కాంటాక్ట్ ఎంచుకోండి",
@@ -144,7 +144,7 @@ export default {
   minute: "నిమిషం",
   commandNotRecognized: "❌ అర్థం కాలేదు. దయచేసి మళ్లీ ప్రయత్నించండి.",
   nannaAiAssistant: "నాన్న AI అసిస్టెంట్",
-  emergencyContacts: "అత్యవసర పరిచయాలు",
+  emergencyContacts: "అత్యవసర పరిచ���ాలు",
   sos: "అత్యవసర సహాయం (SOS)",
   primaryContact: "ప్రధాన పరిచయం",
   secondaryContact: "రెండవ పరిచయం",
