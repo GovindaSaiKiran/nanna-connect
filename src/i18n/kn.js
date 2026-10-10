@@ -12,7 +12,7 @@ export default {
   search: "ಹುಡುಕು",
 
   // Home
-  appTitle: "Nanna Connect",
+  appTitle: "Elder Use Control",
   callContact: "ಕರೆ ಮಾಡಿ",
   callContactSubtitle: "Call Contact",
   callContactVoice: "ಕರೆ ಮಾಡಲು ಸಂಪರ್ಕವನ್ನು ಆರಿಸಿ",
