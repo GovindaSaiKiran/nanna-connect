@@ -12,7 +12,7 @@ export default {
   search: "వెతకండి",
 
   // Home
-  appTitle: "Nanna Connect",
+  appTitle: "Elder Use Control",
   callContact: "కాల్ చేయండి",
   callContactSubtitle: "Call Contact",
   callContactVoice: "కాల్ చేయడానికి కాంటాక్ట్ ఎంచుకోండి",
