@@ -8,6 +8,8 @@ The project was built for the **#BuildForDad Challenge** with the goal of reduci
 
 Instead of navigating complex menus and applications, users can perform important daily tasks using simple voice commands and large accessibility-friendly interfaces.
 
+Live Demo: https://nanna-connect.vercel.app/
+
 ---
 
 # 🎯 Problem Statement
@@ -465,3 +467,7 @@ Technology should adapt to people.
 People should not be forced to adapt to technology.
 
 Nanna Connect was created to make smartphones simpler, safer, and more accessible for elderly users through voice, language, and intelligent assistance.
+
+## Live Demo
+
+https://nanna-connect.vercel.app/
