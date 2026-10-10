@@ -1,4 +1,4 @@
-# 👨‍👦 Nanna Connect
+# 👨‍👦 Elder Helper
 
 ## AI-Powered Multilingual Elderly Assistance Platform
 
